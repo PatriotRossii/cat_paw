@@ -1,23 +1,12 @@
-use rusqlite::Connection;
-
-use super::Model;
+use super::{Field, FieldAttribute, Model};
 
 struct PasswordsModel { }
 
-impl Model for PasswordsModel {
-    fn create(conn: &Connection) -> rusqlite::Result<usize> {
-        conn.execute(
-            "CREATE TABLE passwords (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                password TEXT NOT NULL,
-            )", []
-        )
-    }
-
-    fn destroy(conn: &Connection) -> rusqlite::Result<usize> {
-        conn.execute(
-            "DROP TABLE passwords", []
-        )
-    }
+impl Model<3> for PasswordsModel {
+    const TABLE_NAME: &'static str = "passwords";
+    const TABLE_COLUMNS: [Field; 3] = 
+        [Field::new("id", &[FieldAttribute::Integer, FieldAttribute::PrimaryKey, FieldAttribute::Autoincrement]),
+         Field::new("name", &[FieldAttribute::Text, FieldAttribute::NotNull]),
+         Field::new("password", &[FieldAttribute::Text, FieldAttribute::NotNull])
+        ];
 }
